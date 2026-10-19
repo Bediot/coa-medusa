@@ -81,11 +81,15 @@ export async function syncAllProducts(
   const all: ReturnType<typeof mapMedusaProductToCoa>[] = []
 
   for (;;) {
-    const { products, count } = await listProductsForCoa(container, {
+    const { products } = await listProductsForCoa(container, {
       take: pageSize,
       skip,
       publishedOnly: options.publishedOnly ?? false,
     })
+
+    if (products.length === 0) {
+      break
+    }
 
     for (const product of products) {
       all.push(
@@ -97,7 +101,9 @@ export async function syncAllProducts(
     }
 
     skip += products.length
-    if (products.length === 0 || skip >= count) {
+    // Do not trust metadata.count alone — some Query setups report page size.
+    // Keep paging until a short page.
+    if (products.length < pageSize) {
       break
     }
   }
