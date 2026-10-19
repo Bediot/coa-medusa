@@ -1,0 +1,91 @@
+{
+  "name": "@bediot/coa-medusa",
+  "version": "0.1.0",
+  "description": "Medusa v2 plugin — push catalog products to CoA via @bediot/coa",
+  "license": "MIT",
+  "author": "Bediot",
+  "homepage": "https://coa.sh",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bediot/coa-medusa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Bediot/coa-medusa/issues"
+  },
+  "keywords": [
+    "coa",
+    "medusa",
+    "medusa-v2",
+    "medusa-plugin",
+    "medusa-plugin-other",
+    "certificate-of-analysis",
+    "catalog"
+  ],
+  "files": [
+    ".medusa/server",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    "./workflows": "./.medusa/server/src/workflows/index.js",
+    "./.medusa/server/src/modules/*": "./.medusa/server/src/modules/*/index.js",
+    "./modules/*": "./.medusa/server/src/modules/*/index.js",
+    "./providers/*": "./.medusa/server/src/providers/*/index.js",
+    "./*": "./.medusa/server/src/*.js",
+    "./admin": {
+      "import": "./.medusa/server/src/admin/index.mjs",
+      "require": "./.medusa/server/src/admin/index.js",
+      "default": "./.medusa/server/src/admin/index.js"
+    }
+  },
+  "scripts": {
+    "build": "medusa plugin:build",
+    "dev": "medusa plugin:develop",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "medusa lint",
+    "prepublishOnly": "medusa plugin:build && vitest run"
+  },
+  "dependencies": {
+    "@bediot/coa": "^0.2.0"
+  },
+  "devDependencies": {
+    "@medusajs/admin-sdk": "2.20.0",
+    "@medusajs/cli": "2.20.0",
+    "@medusajs/framework": "2.20.0",
+    "@medusajs/icons": "2.20.0",
+    "@medusajs/medusa": "2.20.0",
+    "@medusajs/test-utils": "2.20.0",
+    "@medusajs/ui": "4.2.2",
+    "@swc/core": "^1.7.28",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.2.25",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2",
+    "vite": "^7.3.6",
+    "vitest": "^3.0.9",
+    "yalc": "^1.0.0-pre.53"
+  },
+  "peerDependencies": {
+    "@medusajs/admin-sdk": ">=2.8.0",
+    "@medusajs/cli": ">=2.8.0",
+    "@medusajs/framework": ">=2.8.0",
+    "@medusajs/icons": ">=2.8.0",
+    "@medusajs/medusa": ">=2.8.0",
+    "@medusajs/ui": ">=4.0.0",
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
