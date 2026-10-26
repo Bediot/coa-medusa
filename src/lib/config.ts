@@ -3,7 +3,11 @@ import { createClient, type CoaClient, type CoaClientOptions } from "./coa-sdk"
 export type CoaSkuMode = "metadata" | "sole_variant" | "handle_only"
 
 export type CoaPluginOptions = {
-  /** Override `COA_STORE_ID`. Prefer env on the worker. */
+  /**
+   * Override `COA_STORE_ID`. Prefer env on the worker.
+   * Use the store **public short id** (same as embeds), not the DB numeric id.
+   * Passed through as a string to `@bediot/coa` `createClient` — never coerced with `Number()`.
+   */
   storeId?: string | number
   /** Override `COA_STORE_API_KEY`. Prefer env on the worker — never ship to the storefront. */
   apiKey?: string
@@ -73,9 +77,18 @@ export function resolvePluginConfig(
   const debounceMs =
     Number.isFinite(debounceRaw) && debounceRaw >= 0 ? debounceRaw : 2500
 
+  const rawStoreId = options.storeId ?? process.env.COA_STORE_ID
+  // Keep as string — public slugs must not be Number()-coerced (NaN).
+  const storeId =
+    rawStoreId === undefined || rawStoreId === ""
+      ? undefined
+      : typeof rawStoreId === "number"
+        ? String(rawStoreId)
+        : String(rawStoreId)
+
   return {
     ...options,
-    storeId: options.storeId ?? process.env.COA_STORE_ID,
+    storeId,
     apiKey: options.apiKey ?? process.env.COA_STORE_API_KEY,
     apiBase: options.apiBase ?? process.env.COA_API_BASE,
     imageBase: options.imageBase ?? process.env.COA_IMAGE_BASE,

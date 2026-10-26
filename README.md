@@ -34,7 +34,7 @@ Set these on the process that runs **subscribers and jobs** (`MEDUSA_WORKER_MODE
 
 | Variable | Required | Notes |
 |----------|----------|--------|
-| `COA_STORE_ID` | yes | Prefer **numeric** store id for catalog writes (dashboard → store). Public embed slug is separate. |
+| `COA_STORE_ID` | yes | Store **public short id** (e.g. `fc1b4i7wzhmu`) — same value as embeds / `@bediot/coa-nextjs` `NEXT_PUBLIC_COA_STORE_ID`. Used in `/api/v1/stores/{storeId}/…`. UUID also works; numeric DB id works but is not the merchant-facing value. |
 | `COA_STORE_API_KEY` | yes | Workspace key `coa_ct_…` — **never** `NEXT_PUBLIC_*` |
 | `COA_API_BASE` | no | Default `https://api.coa.sh` |
 | `COA_SYNC_ENABLED` | no | Kill switch: `0` / `false` skips subscribers + Admin sync |
