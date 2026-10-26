@@ -59,9 +59,10 @@ export async function GET(
   const options = resolvePluginConfig()
   res.json({
     enabled: isSyncEnabled(options),
-    store_configured: Boolean(options.storeId),
     api_key_configured: Boolean(options.apiKey),
     api_base: options.apiBase ?? "https://api.coa.sh (default)",
     sku_mode: options.skuMode,
+    /** Sync resolves store from the API key; store id env is unused. */
+    store_id_required: false,
   })
 }

@@ -16,7 +16,7 @@ import {
  * - `product.deleted` → `trashProduct`
  *
  * Always re-fetches the product graph before mapping (payload is id-only).
- * Secrets: `COA_STORE_ID` + `COA_STORE_API_KEY` on the **worker** process.
+ * Secrets: `COA_STORE_API_KEY` (+ optional `COA_API_BASE`) on the **worker** process.
  * Kill switch: `COA_SYNC_ENABLED=0`.
  *
  * Unpublish (`draft`) syncs status — does not trash. Hard delete trashes.
