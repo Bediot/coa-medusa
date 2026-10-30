@@ -3,9 +3,12 @@ import { createClient, type CoaClient, type CoaClientOptions } from "./coa-sdk"
 export type CoaSkuMode = "metadata" | "sole_variant" | "handle_only"
 
 export type CoaPluginOptions = {
-  /** Override `COA_STORE_ID`. Prefer env on the worker. */
+  /**
+   * Optional / deprecated for sync. Catalog sync resolves the store from the API key.
+   * Env: `COA_STORE_ID` — unused by key-only sync; embeds still use `NEXT_PUBLIC_COA_STORE_ID`.
+   */
   storeId?: string | number
-  /** Override `COA_STORE_API_KEY`. Prefer env on the worker — never ship to the storefront. */
+  /** Override `COA_STORE_API_KEY`. Prefer env on the worker — never ship to the storefront. Required. */
   apiKey?: string
   /** Override `COA_API_BASE` (default https://api.coa.sh). */
   apiBase?: string
@@ -73,9 +76,18 @@ export function resolvePluginConfig(
   const debounceMs =
     Number.isFinite(debounceRaw) && debounceRaw >= 0 ? debounceRaw : 2500
 
+  const rawStoreId = options.storeId ?? process.env.COA_STORE_ID
+  // Keep as string — public slugs must not be Number()-coerced (NaN).
+  const storeId =
+    rawStoreId === undefined || rawStoreId === ""
+      ? undefined
+      : typeof rawStoreId === "number"
+        ? String(rawStoreId)
+        : String(rawStoreId)
+
   return {
     ...options,
-    storeId: options.storeId ?? process.env.COA_STORE_ID,
+    storeId,
     apiKey: options.apiKey ?? process.env.COA_STORE_API_KEY,
     apiBase: options.apiBase ?? process.env.COA_API_BASE,
     imageBase: options.imageBase ?? process.env.COA_IMAGE_BASE,
@@ -89,16 +101,14 @@ export function isSyncEnabled(options: CoaPluginOptions = {}): boolean {
   return resolvePluginConfig(options).enabled
 }
 
-/** Build a `@bediot/coa` client from plugin options / env. */
+/** Build a `@bediot/coa` client from plugin options / env (API key required; store id optional/legacy). */
 export function createCoaClientFromConfig(
   options: CoaPluginOptions = {}
 ): CoaClient {
   const cfg = resolvePluginConfig(options)
   const clientOpts: CoaClientOptions = {}
-  if (cfg.storeId !== undefined && cfg.storeId !== "") {
-    clientOpts.storeId = cfg.storeId
-  }
   if (cfg.apiKey) clientOpts.apiKey = cfg.apiKey
   if (cfg.apiBase) clientOpts.apiBase = cfg.apiBase
+  // Prefer key-only sync — do not pass storeId so @bediot/coa uses /api/v1/catalog-products/…
   return createClient(clientOpts)
 }

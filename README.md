@@ -34,9 +34,9 @@ Set these on the process that runs **subscribers and jobs** (`MEDUSA_WORKER_MODE
 
 | Variable | Required | Notes |
 |----------|----------|--------|
-| `COA_STORE_ID` | yes | Prefer **numeric** store id for catalog writes (dashboard → store). Public embed slug is separate. |
-| `COA_STORE_API_KEY` | yes | Workspace key `coa_ct_…` — **never** `NEXT_PUBLIC_*` |
+| `COA_STORE_API_KEY` | yes | Workspace key `coa_ct_…` — **never** `NEXT_PUBLIC_*`. Store is resolved from the key (1:1). |
 | `COA_API_BASE` | no | Default `https://api.coa.sh` |
+| `COA_STORE_ID` | no | Optional legacy only. Sync does **not** need it. Storefront embeds still use `NEXT_PUBLIC_COA_STORE_ID` (public short id). |
 | `COA_SYNC_ENABLED` | no | Kill switch: `0` / `false` skips subscribers + Admin sync |
 | `COA_IMAGE_BASE` | no | Prefix for relative thumbnails (`/images/…` → absolute URL) |
 | `COA_PRODUCT_SKU_MODE` | no | `metadata` (default) \| `sole_variant` \| `handle_only` |
